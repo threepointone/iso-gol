@@ -951,8 +951,8 @@ require.register("threepointone-claw/index.js", function(exports, require, modul
 });
 require.register("threepointone-beam/beam.js", function(exports, require, module){
 (function(name, context, definition) {
-    if(typeof module != 'undefined' && module.exports) module.exports = definition();
-    else if(typeof define == 'function' && define.amd) define(definition);
+    if (typeof module != 'undefined' && module.exports) module.exports = definition();
+    else if (typeof define == 'function' && define.amd) define(definition);
     else context[name] = definition();
 })('beam', this, function() {
 
@@ -973,71 +973,80 @@ require.register("threepointone-beam/beam.js", function(exports, require, module
             transform: 1
         };
 
+    // which property name does this browser use for transform
+    var transform = function() {
+        var styles = doc.createElement('a').style,
+            props = ['webkitTransform', 'MozTransform', 'OTransform', 'msTransform', 'Transform'],
+            i;
+        for (i = 0; i < props.length; i++) {
+            if (props[i] in styles) return props[i];
+        }
+    }();
+
     // a whole bunch of usefule functions
 
-    function camelize(s) {
-        return s.replace(/-(.)/g, function(m, m1) {
-            return m1.toUpperCase();
-        });
-    }
-
-    function uppercase(p, a) {
-        return a.toUpperCase();
-    }
-
-
-    function vendor(property) {
-        // return the vendor prefix for a given property. should even work with firefox fudging -webkit.
-        var div = doc.createElement('div');
-        var x = 'Khtml Moz Webkit O ms '.split(' '),
-            i;
-        for(i = x.length - 1; i >= 0; i--) {
-            if(((x[i] ? x[i] + '-' : '') + property).replace(/\-(\w)/g, uppercase) in div.style) {
-                return x[i] ? '-' + x[i].toLowerCase() + '-' : ''; // empty string, if it works without prefix
-            }
+        function camelize(s) {
+            return s.replace(/-(.)/g, function(m, m1) {
+                return m1.toUpperCase();
+            });
         }
-        return null; // not found...
-    }
 
-    function unit(style, def) {
-        // extracts the unit part of the string. px, em, whatever. 
-        return(/(%|in|cm|mm|em|ex|pt|pc|px|deg)+/.exec(style) || [def])[0];
-    }
+        function uppercase(p, a) {
+            return a.toUpperCase();
+        }
 
-    function num(style) {
-        // extracts the number part of the style
-        return parseFloat(style, 10);
-    }
 
-    // initial style is determined by the elements themselves
-    var getStyle = doc.defaultView && doc.defaultView.getComputedStyle ?
-    function(el, property) {
-        property = property == 'transform' ? transform : property
-        var value = null,
-            computed = doc.defaultView.getComputedStyle(el, '');
-        computed && (value = computed[camelize(property)]);
-        return el.style[property] || value;
-    } : html.currentStyle ?
+        function vendor(property) {
+            // return the vendor prefix for a given property. should even work with firefox fudging -webkit.
+            var div = doc.createElement('div');
+            var x = 'Khtml Moz Webkit O ms '.split(' '),
+                i;
+            for (i = x.length - 1; i >= 0; i--) {
+                if (((x[i] ? x[i] + '-' : '') + property).replace(/\-(\w)/g, uppercase) in div.style) {
+                    return x[i] ? '-' + x[i].toLowerCase() + '-' : ''; // empty string, if it works without prefix
+                }
+            }
+            return null; // not found...
+        }
 
-    function(el, property) {
-        property = camelize(property);
+        function unit(style, def) {
+            // extracts the unit part of the string. px, em, whatever. 
+            return (/(%|in|cm|mm|em|ex|pt|pc|px|deg)+/.exec(style) || [def])[0];
+        }
 
-        if(property == 'opacity') {
-            var val = 100;
-            try {
-                val = el.filters['DXImageTransform.Microsoft.Alpha'].opacity;
-            } catch(e1) {
+        function num(style) {
+            // extracts the number part of the style
+            return parseFloat(style, 10);
+        }
+
+        // initial style is determined by the elements themselves
+    var getStyle = doc.defaultView && doc.defaultView.getComputedStyle ? function(el, property) {
+            property = property == 'transform' ? transform : property
+            var value = null,
+                computed = doc.defaultView.getComputedStyle(el, '');
+            computed && (value = computed[camelize(property)]);
+            return el.style[property] || value;
+        } : html.currentStyle ?
+
+        function(el, property) {
+            property = camelize(property);
+
+            if (property == 'opacity') {
+                var val = 100;
                 try {
-                    val = el.filters('alpha').opacity;
-                } catch(e2) {}
+                    val = el.filters['DXImageTransform.Microsoft.Alpha'].opacity;
+                } catch (e1) {
+                    try {
+                        val = el.filters('alpha').opacity;
+                    } catch (e2) {}
+                }
+                return val / 100;
             }
-            return val / 100;
-        }
-        var value = el.currentStyle ? el.currentStyle[property] : null
-        return el.style[property] || value;
-    } : function(el, property) {
-        return el.style[camelize(property)];
-    };
+            var value = el.currentStyle ? el.currentStyle[property] : null
+            return el.style[property] || value;
+        } : function(el, property) {
+            return el.style[camelize(property)];
+        };
 
     function setStyle(el, prop, val) {
         // "special" setStyle
@@ -1045,7 +1054,7 @@ require.register("threepointone-beam/beam.js", function(exports, require, module
         var b = el.__beam__;
         var prev = b.prev;
 
-        if(typeof prop !== 'string') {
+        if (typeof prop !== 'string') {
             each(prop, function(v, p) {
                 setStyle(el, p, v);
             });
@@ -1060,10 +1069,10 @@ require.register("threepointone-beam/beam.js", function(exports, require, module
         // for perf, store a prev value on the __beam__. makes this infinitely more usable for multiple ui elements
 
         // first check if it's an rgb triplet
-        if(val.r) {
+        if (val.r) {
 
             var color = rgb(val.r, val.g, val.b);
-            if(color !== prev[prop]) {
+            if (color !== prev[prop]) {
                 el.style[prop] = rgb(val.r, val.g, val.b);
                 prev[prop] = color;
 
@@ -1073,11 +1082,13 @@ require.register("threepointone-beam/beam.js", function(exports, require, module
         }
 
 
-        if(prev[prop] !== val) {            
+        if (prev[prop] !== val) {
 
             // the following line is easily the most expensive line in the entire lib. 
             // and that's why kids, you never make a css animation engine
-            if(prop==='zIndex'){ val = Math.ceil(val); } // gah.
+            if (prop === 'zIndex') {
+                val = Math.ceil(val);
+            } // gah.
             el.style[prop] = val + (unitless[prop] ? '' : b.$t(prop).unit);
             prev[prop] = val;
         }
@@ -1089,7 +1100,7 @@ require.register("threepointone-beam/beam.js", function(exports, require, module
     function toHex(c) {
         var m = c.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
         // short skirt to long jacket
-        return(m ? rgb(m[1], m[2], m[3]) : c).replace(/#(\w)(\w)(\w)$/, '#$1$1$2$2$3$3');
+        return (m ? rgb(m[1], m[2], m[3]) : c).replace(/#(\w)(\w)(\w)$/, '#$1$1$2$2$3$3');
     }
 
     function encodeColor(hex) {
@@ -1114,19 +1125,18 @@ require.register("threepointone-beam/beam.js", function(exports, require, module
         each(input, function(val, prop) {
             // first convert the label to a vendor prefixed, camelized version
             prop = camelize(vendor(prop) || '' + prop);
-            if(typeof val === 'string') {
+            if (typeof val === 'string') {
                 // if it's a color, then make the rgb triad
-                if(rgbOhex.test(val)) {
+                if (rgbOhex.test(val)) {
                     o[prop] = encodeColor(val);
                     return;
                 }
                 o[prop] = num(val);
                 // return;
+            } else {
+                o[prop] = val;
             }
-            else{
-                o[prop] = val;    
-            }
-            
+
         });
         return o;
     }
@@ -1140,7 +1150,7 @@ require.register("threepointone-beam/beam.js", function(exports, require, module
     function track(el) {
         // lemme know when proper object hashes become mainstream. 
         // until then, carry on young man
-        if(el.__beam__) {
+        if (el.__beam__) {
             return el.__beam__;
         }
 
@@ -1160,7 +1170,7 @@ require.register("threepointone-beam/beam.js", function(exports, require, module
             });
 
             // todo - optimize the cond. 
-            if(claw.formatTransform(o) !== transformer.prev) {
+            if (claw.formatTransform(o) !== transformer.prev) {
                 claw(el, o);
                 transformer.prev = claw.formatTransform(o);
             }
@@ -1181,7 +1191,7 @@ require.register("threepointone-beam/beam.js", function(exports, require, module
         var o = {};
         each(to, function(val, prop) {
             prop = camelize(vendor(prop) + prop);
-            if(prop === claw.transform) {
+            if (prop === claw.transform) {
                 each(val, function(v, p) {
                     var tween = tracker.transformer.$t(p).to(num(v));
                     tween.unit = unit(v, '') || tween.unit || '';
@@ -1189,9 +1199,9 @@ require.register("threepointone-beam/beam.js", function(exports, require, module
                 return;
             }
 
-            if(!tracker.tweens[prop]) {
+            if (!tracker.tweens[prop]) {
                 var currentStyle = getStyle(el, prop) || '';
-                if(rgbOhex.test(currentStyle)) {
+                if (rgbOhex.test(currentStyle)) {
                     var tween = tracker.$t(prop, true).from(encodeColor(currentStyle));
                 } else {
                     var numerical = num(currentStyle);
@@ -1201,7 +1211,7 @@ require.register("threepointone-beam/beam.js", function(exports, require, module
                 }
             }
             var tween = tracker.$t(prop);
-            if(typeof val === 'string' && !rgbOhex.test(val) && unit(val, '') !== tween.unit) {
+            if (typeof val === 'string' && !rgbOhex.test(val) && unit(val, '') !== tween.unit) {
                 tween.unit = unit(val, '');
                 tween.from(num(val));
             }
@@ -1232,7 +1242,7 @@ require.register("threepointone-beam/beam.js", function(exports, require, module
     function animate() {
 
         // use a quick for loop
-        for(var i = 0, j = instances.length; i < j; i++) {
+        for (var i = 0, j = instances.length; i < j; i++) {
             instances[i].update().transformer.update();
         }
         raf(animate);
