@@ -1,8 +1,8 @@
 # iso-gol
 
-    Conway's game of life, projected onto 3d isometric space in css
+Conway's game of life, projected onto 3d isometric space in css
 
-    ![cubes](http://i.imgur.com/tNlRdKh.png)
+![cubes](http://i.imgur.com/tNlRdKh.png)
 
 ## Installation
 
