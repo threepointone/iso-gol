@@ -1,0 +1,23 @@
+{
+  "name": "iso-gol",
+  "repo": "threepointone/iso-gol",
+  "description": "conway's game of life, projected onto isometric 3d space in css",
+  "version": "0.0.1",
+  "keywords": [],
+  "dependencies": {
+    "threepointone/iso-grid": "*",
+    "threepointone/game-of-life": "*",
+    "segmentio/extend": "*",
+    "threepointone/beam": "*",
+    "manuelstofer/each": "*",
+    "yields/isarray": "*"
+  },
+  "development": {},
+  "license": "MIT",
+  "scripts": [
+    "index.js"
+  ],
+  "styles": [
+    "iso-gol.css"
+  ]
+}

@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+<head>
+    <title>isometric game of life</title>
+    <link rel="stylesheet" type="text/css" href="../build/build.css">
+</head>
+<body>
+    <div id="boxes"></div>
+    <script src="../build/build.js"></script>
+    <script>
+        var isogol = require('iso-gol');
+        var gun = [
+            [1, 4],
+            [1, 5],
+            [2, 4],
+            [2, 5],
+            [11, 3],
+            [11, 4],
+            [11, 5],
+            [12, 2],
+            [12, 6],
+            [13, 1],
+            [13, 7],
+            [14, 1],
+            [14, 7],
+            [15, 4],
+            [16, 2],
+            [16, 6],
+            [17, 3],
+            [17, 4],
+            [17, 5],
+            [18, 4],
+            [21, 5],
+            [21, 6],
+            [21, 7],
+            [22, 5],
+            [22, 6],
+            [22, 7],
+            [23, 4],
+            [23, 8],
+            [25, 3],
+            [25, 4],
+            [25, 8],
+            [25, 9],
+            [35, 6],
+            [35, 7],
+            [36, 6],
+            [36, 7]
+        ];
+        var scene = isogol(document.getElementById(isogol),{
+            offset:{
+                top:700,
+                left:0
+            }
+        });
+        for(var i=0;i<gun.length;i++){
+            scene.gol.at(gun[i][0], 10 + gun[i][1], true);
+        }
+        setInterval(function(){
+            scene.step();
+        },500);
+        
+    </script>
+</body>
+</html>
