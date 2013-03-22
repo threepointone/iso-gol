@@ -3,6 +3,16 @@
 <head>
     <title>isometric game of life</title>
     <link rel="stylesheet" type="text/css" href="../build/build.css">
+    <style>
+        #boxes{
+            -webkit-transform: scale(0.6);
+            -moz-transform: scale(0.6);
+            -ms-transform: scale(0.6);
+            -o-transform: scale(0.6);
+            transform: scale(0.6);
+
+        }
+    </style>
 </head>
 <body>
     <div id="boxes"></div>
@@ -47,10 +57,10 @@
             [36, 6],
             [36, 7]
         ];
-        var scene = isogol(document.getElementById(isogol),{
+        var scene = isogol(document.getElementById('boxes'),{
             offset:{
-                top:700,
-                left:0
+                top:780,
+                left:100
             }
         });
         for(var i=0;i<gun.length;i++){
