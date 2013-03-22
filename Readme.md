@@ -2,6 +2,8 @@
 
     Conway's game of life, projected onto 3d isometric space in css
 
+    ![cubes](http://i.imgur.com/tNlRdKh.png)
+
 ## Installation
 
     $ component install threepointone/iso-gol
